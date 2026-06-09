@@ -38,6 +38,8 @@ dbutils.widgets.text("warehouse_id", "", "3 · SQL warehouse id (blank = auto-pi
 dbutils.widgets.text("lakebase_instance", "attach-war-room-db", "4 · Lakebase instance name")
 dbutils.widgets.text("lakebase_database", "attach_war_room", "5 · Lakebase database name")
 dbutils.widgets.text("app_name", "attach-war-room", "6 · Databricks App name")
+dbutils.widgets.dropdown("lakebase_tier", "provisioned", ["provisioned", "autoscaling"],
+                         "7 · Lakebase connection tier (same instance; 'autoscaling' uses the postgres endpoint API)")
 
 # COMMAND ----------
 import argparse
@@ -62,7 +64,9 @@ args = argparse.Namespace(
     profile="",                          # empty -> use the notebook's runtime auth (you)
     catalog=P("catalog"), schema=P("schema"), warehouse_id=P("warehouse_id"),
     lakebase_instance=P("lakebase_instance"), lakebase_database=P("lakebase_database"),
-    lakebase_capacity="CU_1", app_name=P("app_name"), genie_parent="",
+    lakebase_capacity="CU_1", lakebase_tier=P("lakebase_tier"),
+    lakebase_branch="production", lakebase_endpoint="primary",
+    app_name=P("app_name"), genie_parent="",
     model_agent="databricks-claude-sonnet-4-6", model_classifier="databricks-claude-haiku-4-5",
     only="", skip="", teardown=False, drop_schema=False, yes=True,
 )

@@ -51,8 +51,9 @@ PG_TOKEN_TTL_S = int(os.environ.get("PG_TOKEN_TTL_S", "2700"))  # ~45 min (token
 LAKEBASE_DATABASE = os.environ.get("PGDATABASE", os.environ.get("LAKEBASE_DATABASE", "attach_war_room"))
 # Provisioned instance (preferred for Databricks Apps: resource-bindable + SP role API).
 LAKEBASE_INSTANCE = os.environ.get("LAKEBASE_INSTANCE", "attach-war-room-db")
-# Autoscaling fallback (project/branch/endpoint).
-LAKEBASE_PROJECT = os.environ.get("LAKEBASE_PROJECT", "attach-war-room")
+# Autoscaling path (project/branch/endpoint). In unified Lakebase the postgres "project"
+# is named the same as the instance, so default LAKEBASE_PROJECT to the instance name.
+LAKEBASE_PROJECT = os.environ.get("LAKEBASE_PROJECT", LAKEBASE_INSTANCE)
 LAKEBASE_BRANCH = os.environ.get("LAKEBASE_BRANCH", "production")
 LAKEBASE_ENDPOINT = os.environ.get("LAKEBASE_ENDPOINT", "primary")
 BRANCH_PATH = f"projects/{LAKEBASE_PROJECT}/branches/{LAKEBASE_BRANCH}"

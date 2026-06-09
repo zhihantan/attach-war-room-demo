@@ -109,6 +109,7 @@ Captured ids are written to `install_state.json` so re-runs and `--only` steps s
 | `--lakebase-instance` | `attach-war-room-db` | Provisioned instance name. |
 | `--lakebase-database` | `attach_war_room` | Database name inside the instance. |
 | `--lakebase-capacity` | `CU_1` | Provisioned capacity. |
+| `--lakebase-tier` | `provisioned` | Connection path the App uses: `provisioned` (instance API) or `autoscaling` (postgres endpoint API). Same instance/host/data either way — `autoscaling` just routes via `projects/<instance>/branches/production/endpoints/primary`. |
 | `--app-name` | `attach-war-room` | Databricks App name. |
 | `--genie-parent` | `/Workspace/Users/<you>` | Folder for the Genie space. |
 | `--model-agent` / `--model-classifier` | `claude-sonnet-4-6` / `claude-haiku-4-5` | FMAPI endpoints. |

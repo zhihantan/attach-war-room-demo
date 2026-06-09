@@ -23,8 +23,14 @@ foundation_models:
   classifier: databricks-claude-haiku-4-5   # free-text abandonment-cause classification
 
 lakebase:
-  tier: provisioned             # provisioned instance — resource-bindable + DatabaseInstanceRole API (SP OAuth)
+  # tier = which credential/connection path the deployed App uses (install.py --lakebase-tier).
+  #   provisioned (default): the instance (database.*) API — resource-bindable + DatabaseInstanceRole (SP OAuth).
+  #   autoscaling:           the postgres endpoint (postgres.*) API. SAME underlying instance + host + data;
+  #                          just routes via projects/<instance>/branches/<branch>/endpoints/<endpoint>.
+  tier: provisioned
   instance: attach-war-room-db  # created by install.py
+  branch: production            # (autoscaling tier) postgres branch id
+  endpoint: primary             # (autoscaling tier) postgres compute endpoint id
   database: attach_war_room
   host:                         # populated by install.py after the instance is created
   serving_table: offer_config   # seeded from the Delta golden copy; the agent writes approved changes here (ACID)

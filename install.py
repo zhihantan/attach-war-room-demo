@@ -57,6 +57,15 @@ def parse_args():
     p.add_argument("--lakebase-instance", default=os.environ.get("AWR_LAKEBASE_INSTANCE", "attach-war-room-db"))
     p.add_argument("--lakebase-database", default=os.environ.get("AWR_LAKEBASE_DATABASE", "attach_war_room"))
     p.add_argument("--lakebase-capacity", default=os.environ.get("AWR_LAKEBASE_CAPACITY", "CU_1"))
+    p.add_argument("--lakebase-tier", default=os.environ.get("AWR_LAKEBASE_TIER", "provisioned"),
+                   choices=["provisioned", "autoscaling"],
+                   help="Which Lakebase credential/connection path the deployed App uses. Both views point at "
+                        "the SAME instance; 'autoscaling' routes via the postgres endpoint API "
+                        "(projects/<instance>/branches/<branch>/endpoints/<endpoint>) instead of the instance API.")
+    p.add_argument("--lakebase-branch", default=os.environ.get("AWR_LAKEBASE_BRANCH", "production"),
+                   help="(autoscaling tier) Lakebase branch id.")
+    p.add_argument("--lakebase-endpoint", default=os.environ.get("AWR_LAKEBASE_ENDPOINT", "primary"),
+                   help="(autoscaling tier) Lakebase compute endpoint id.")
     p.add_argument("--app-name", default=os.environ.get("AWR_APP_NAME", "attach-war-room"))
     p.add_argument("--genie-parent", default=os.environ.get("AWR_GENIE_PARENT", ""),
                    help="Workspace folder for the Genie space (default: /Workspace/Users/<you>).")
@@ -84,6 +93,11 @@ class Ctx:
         self.warehouse_id = args.warehouse_id
         self.lakebase_instance = args.lakebase_instance
         self.lakebase_database = args.lakebase_database
+        # getattr fallbacks: the in-workspace setup notebook builds a Namespace that may
+        # predate these fields. Default to the provisioned path (the supported default).
+        self.lakebase_tier = getattr(args, "lakebase_tier", "provisioned")
+        self.lakebase_branch = getattr(args, "lakebase_branch", "production")
+        self.lakebase_endpoint = getattr(args, "lakebase_endpoint", "primary")
         self.app_name = args.app_name
         self.genie_space_id = ""
         self.pg_host = ""
@@ -117,7 +131,13 @@ class Ctx:
         os.environ["SCHEMA_FQN"] = self.schema_fqn
         os.environ["WAREHOUSE_ID"] = self.warehouse_id
         os.environ["LAKEBASE_INSTANCE"] = self.lakebase_instance
-        os.environ["LAKEBASE_TIER"] = "provisioned"
+        os.environ["LAKEBASE_TIER"] = self.lakebase_tier
+        if self.lakebase_tier == "autoscaling":
+            # In unified Lakebase the provisioned instance is also reachable via the postgres
+            # endpoint API under a project named the same as the instance.
+            os.environ["LAKEBASE_PROJECT"] = self.lakebase_instance
+            os.environ["LAKEBASE_BRANCH"] = self.lakebase_branch
+            os.environ["LAKEBASE_ENDPOINT"] = self.lakebase_endpoint
         os.environ["PGDATABASE"] = self.lakebase_database
         os.environ["MODEL_AGENT"] = self.args.model_agent
         os.environ["MODEL_CLASSIFIER"] = self.args.model_classifier
@@ -413,10 +433,16 @@ def _app_yaml_content(ctx):
     env = {
         "SCHEMA_FQN": ctx.schema_fqn, "WAREHOUSE_ID": ctx.warehouse_id, "GENIE_SPACE_ID": ctx.genie_space_id,
         "MODEL_AGENT": ctx.args.model_agent, "MODEL_CLASSIFIER": ctx.args.model_classifier,
-        "LAKEBASE_INSTANCE": ctx.lakebase_instance, "LAKEBASE_TIER": "provisioned",
+        "LAKEBASE_INSTANCE": ctx.lakebase_instance, "LAKEBASE_TIER": ctx.lakebase_tier,
         "PGDATABASE": ctx.lakebase_database, "PGHOST": ctx.pg_host, "PGUSER": ctx.app_sp,
         "PGPORT": "5432", "PGSSLMODE": "require",
     }
+    if ctx.lakebase_tier == "autoscaling":
+        # route the deployed App via the postgres endpoint credential API — same instance + host,
+        # just a different credential path (dbx.py picks it up from LAKEBASE_TIER).
+        env["LAKEBASE_PROJECT"] = ctx.lakebase_instance
+        env["LAKEBASE_BRANCH"] = ctx.lakebase_branch
+        env["LAKEBASE_ENDPOINT"] = ctx.lakebase_endpoint
     lines = ["command:", "  - \"uvicorn\"", "  - \"app:app\"", "  - \"--host\"", "  - \"0.0.0.0\"",
              "  - \"--port\"", "  - \"8000\"", "", "env:"]
     for k, v in env.items():
