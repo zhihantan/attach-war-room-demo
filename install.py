@@ -278,9 +278,10 @@ def step_genie(ctx):
 
 
 def _wait_instance(w, name, target="AVAILABLE", timeout=1200):
-    # states from which the instance will NOT reach AVAILABLE by waiting — fail fast with a
-    # clear, actionable message instead of polling out the full timeout (which masks the cause).
-    fatal = {"DELETING", "STOPPED", "FAILING_OVER"}
+    # states from which the instance will NOT reach AVAILABLE on its own — fail fast with a clear,
+    # actionable message instead of polling out the full timeout (which masks the real cause).
+    # (FAILING_OVER is transient — it recovers to AVAILABLE — so it is intentionally NOT fatal.)
+    fatal = {"DELETING", "STOPPED"}
     t0 = time.time()
     while True:
         inst = w.database.get_database_instance(name=name)
