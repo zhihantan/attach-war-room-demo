@@ -31,7 +31,7 @@ git clone https://github.com/zhihantan/attach-war-room-demo.git
 cd attach-war-room
 databricks auth login --profile myws --host https://<your-workspace-host>
 uv run --with databricks-sdk --with psycopg2-binary install.py \
-    --profile myws --catalog attach_war_room --schema attach_war_room
+    --profile myws --catalog bolttech_workshop_demo --schema attach_war_room
 ```
 
 The installer (`install.py`) is parameterized and idempotent; it captures the new Genie space id,
@@ -103,7 +103,7 @@ To re-run: click **`↺ Reset`** in the header (or `POST /api/reset`) — restor
 | | |
 |---|---|
 | Workspace | `https://YOUR-WORKSPACE.cloud.databricks.com` (profile `DEFAULT`) |
-| Data namespace | `main.attach_war_room` (schema; `CREATE CATALOG` not granted — see `config.yaml`) |
+| Data namespace | `bolttech_workshop_demo.attach_war_room` (catalog `bolttech_workshop_demo`, schema `attach_war_room` — see `config.yaml`) |
 | SQL warehouse | Serverless Starter Warehouse (``) |
 | FMAPIs | `databricks-claude-sonnet-4-6` (agent), `databricks-claude-haiku-4-5` (classify) |
 | Lakebase | Autoscaling project `attach-war-room` → `production`/`primary`, db `attach_war_room` |

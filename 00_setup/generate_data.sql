@@ -1,6 +1,6 @@
 -- ============================================================================
 -- Attach War-Room — synthetic data generation (idempotent)
--- Target: {{S}}  (main.attach_war_room)
+-- Target: {{S}}  (bolttech_workshop_demo.attach_war_room)
 -- Engine: Spark SQL on serverless warehouse.
 -- Determinism: all randomness via pmod(hash(id, salt), N) so re-runs reproduce
 --   the exact dataset and the exact planted anomalies.

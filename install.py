@@ -48,7 +48,7 @@ def parse_args():
     p = argparse.ArgumentParser(description="Install the Attach War-Room demo into a Databricks workspace.")
     p.add_argument("--profile", default=os.environ.get("DATABRICKS_PROFILE", "DEFAULT"),
                    help="Databricks CLI auth profile for the TARGET workspace (must be logged in).")
-    p.add_argument("--catalog", default=os.environ.get("AWR_CATALOG", "attach_war_room"),
+    p.add_argument("--catalog", default=os.environ.get("AWR_CATALOG", "bolttech_workshop_demo"),
                    help="Unity Catalog catalog. Created if you have CREATE CATALOG; else must already exist.")
     p.add_argument("--schema", default=os.environ.get("AWR_SCHEMA", "attach_war_room"),
                    help="Schema for the demo tables + metric views.")

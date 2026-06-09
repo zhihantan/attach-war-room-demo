@@ -76,7 +76,7 @@ Everything workspace-specific is centralized. There are **two** files of record 
 | `databricks.host` | `https://YOUR-WORKSPACE.cloud.databricks.com` | your workspace URL |
 | `databricks.profile` | `DEFAULT` | your CLI profile name |
 | `databricks.warehouse_id` | `` | **your** warehouse ID |
-| `unity_catalog.catalog` / `.schema` / `.fqn` | `main` / `attach_war_room` / `main.attach_war_room` | your catalog + schema (the build realizes `attach_war_room` as a **schema** because `CREATE CATALOG` isn't granted on this metastore — point all three at a catalog you can write to) |
+| `unity_catalog.catalog` / `.schema` / `.fqn` | `bolttech_workshop_demo` / `attach_war_room` / `bolttech_workshop_demo.attach_war_room` | your catalog + schema (the installer creates the `bolttech_workshop_demo` catalog if you have `CREATE CATALOG`; otherwise point all three at a catalog you can already write to) |
 | `lakebase.instance` | `attach-war-room-db` | your provisioned instance name |
 | `lakebase.database` | `attach_war_room` | your DB name |
 | `lakebase.host` | `<lakebase-host>` | your instance's Postgres host (printed by step 2) |
@@ -93,7 +93,7 @@ Everything workspace-specific is centralized. There are **two** files of record 
 
 | Env var | Current | Change to |
 |---|---|---|
-| `SCHEMA_FQN` | `main.attach_war_room` | your catalog.schema |
+| `SCHEMA_FQN` | `bolttech_workshop_demo.attach_war_room` | your catalog.schema |
 | `WAREHOUSE_ID` | `` | your warehouse ID |
 | `GENIE_SPACE_ID` | `` | your Genie space id (from step 1) |
 | `MODEL_AGENT` / `MODEL_CLASSIFIER` | sonnet-4-6 / haiku-4-5 | your served model names |

@@ -15,7 +15,7 @@ from databricks.sdk import WorkspaceClient
 
 PROFILE = os.environ.get("DATABRICKS_PROFILE", "DEFAULT")
 WAREHOUSE_ID = os.environ.get("WAREHOUSE_ID", "")
-SCHEMA_FQN = os.environ.get("SCHEMA_FQN", "main.attach_war_room")
+SCHEMA_FQN = os.environ.get("SCHEMA_FQN", "bolttech_workshop_demo.attach_war_room")
 WAIT, POLL, MAX_WAIT = "50s", 2, 900
 
 

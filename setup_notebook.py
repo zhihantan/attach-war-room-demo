@@ -32,7 +32,7 @@ dbutils.library.restartPython()
 
 # COMMAND ----------
 # Parameters — edit these (widgets appear at the top of the notebook).
-dbutils.widgets.text("catalog", "attach_war_room", "1 · Catalog (created if you can; else must exist)")
+dbutils.widgets.text("catalog", "bolttech_workshop_demo", "1 · Catalog (created if you can; else must exist)")
 dbutils.widgets.text("schema", "attach_war_room", "2 · Schema")
 dbutils.widgets.text("warehouse_id", "", "3 · SQL warehouse id (blank = auto-pick serverless)")
 dbutils.widgets.text("lakebase_instance", "attach-war-room-db", "4 · Lakebase instance name")

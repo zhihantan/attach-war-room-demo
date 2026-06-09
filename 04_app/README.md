@@ -53,7 +53,7 @@ databricks apps deploy attach-war-room \
 Deployed at **https://attach-war-room-<workspace-id>.aws.databricksapps.com** as its service principal. What was configured (all done):
 - **Resources bound** via `apps update`: SQL warehouse (CAN_USE) + both serving endpoints (CAN_QUERY).
 - **Lakebase**: a **provisioned** instance `attach-war-room-db` (Autoscaling lacks the SP-OAuth role API / app-resource binding in this Beta). The SP is registered as a `DatabaseInstanceRole` (superuser) via the SDK, plus explicit `public`-schema table grants.
-- **Unity Catalog**: `GRANT SELECT/USE` on `main.attach_war_room` to the SP.
+- **Unity Catalog**: `GRANT SELECT/USE` on `bolttech_workshop_demo.attach_war_room` to the SP.
 - `app.yaml` sets `PGHOST/PGUSER/PGDATABASE/LAKEBASE_INSTANCE/LAKEBASE_TIER`; `dbx.py` mints the DB token via `w.database.generate_database_credential`.
 
 All four ingredients validated end-to-end as the SP. Logs: `https://<app-url>/logz`.
@@ -68,7 +68,7 @@ All four ingredients validated end-to-end as the SP. Logs: `https://<app-url>/lo
    GRANT SELECT, INSERT, UPDATE ON ALL TABLES IN SCHEMA public TO "<APP_SP_CLIENT_ID>";
    GRANT USAGE, SELECT ON ALL SEQUENCES IN SCHEMA public TO "<APP_SP_CLIENT_ID>";
    ```
-3. **Unity Catalog grants for the SP** on `main.attach_war_room` (USE CATALOG/SCHEMA, SELECT) so the warehouse queries + Genie work under the SP identity.
+3. **Unity Catalog grants for the SP** on `bolttech_workshop_demo.attach_war_room` (USE CATALOG/SCHEMA, SELECT) so the warehouse queries + Genie work under the SP identity.
 
 Logs: `https://<app-url>/logz`.
 

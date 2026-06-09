@@ -19,7 +19,7 @@ import uuid
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from genie_space_builder import GenieSpaceBuilder  # noqa: E402
 
-S = os.environ.get("SCHEMA_FQN", "main.attach_war_room")
+S = os.environ.get("SCHEMA_FQN", "bolttech_workshop_demo.attach_war_room")
 WID = os.environ.get("WAREHOUSE_ID", "")
 
 b = GenieSpaceBuilder(

@@ -11,7 +11,7 @@ command:
 
 env:
   - name: SCHEMA_FQN
-    value: "main.attach_war_room"
+    value: "bolttech_workshop_demo.attach_war_room"
   - name: WAREHOUSE_ID
     value: ""                         # filled in by install.py
   - name: GENIE_SPACE_ID

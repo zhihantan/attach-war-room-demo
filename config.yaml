@@ -13,9 +13,9 @@ databricks:
 unity_catalog:
   # If you can't CREATE CATALOG, point `catalog` at one you already have; install.py
   # just creates the schema inside it. Fully parameterized via install.py flags.
-  catalog: main
+  catalog: bolttech_workshop_demo
   schema: attach_war_room
-  fqn: main.attach_war_room
+  fqn: bolttech_workshop_demo.attach_war_room
 
 foundation_models:
   # Pay-per-token FMAPI endpoints. Production: switch to provisioned throughput.
@@ -37,5 +37,5 @@ deployment:
 genie:
   space_id:                     # a new Genie space is created by install.py
   metric_views:
-    - main.attach_war_room.funnel_metrics        # funnel / attach / GWP
-    - main.attach_war_room.profitability_metrics # GWP / losses / loss ratio / frequency
+    - bolttech_workshop_demo.attach_war_room.funnel_metrics        # funnel / attach / GWP
+    - bolttech_workshop_demo.attach_war_room.profitability_metrics # GWP / losses / loss ratio / frequency

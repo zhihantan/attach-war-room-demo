@@ -21,7 +21,7 @@ PREREQUISITES (read before running — this provisions billable infra)
         export DATABRICKS_CONFIG_PROFILE=DEFAULT     # local
   * Unity Catalog: the target catalog+schema must exist and you need CREATE
     MODEL on the schema. Default target is the demo schema:
-        main.attach_war_room.attach_war_room_agent
+        bolttech_workshop_demo.attach_war_room.attach_war_room_agent
     Override via env: UC_CATALOG, UC_SCHEMA, UC_MODEL_NAME.
   * The served endpoint runs as a service principal / on-behalf-of identity that
     must be able to reach the SAME backends the agent uses at runtime:

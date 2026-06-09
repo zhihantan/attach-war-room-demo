@@ -19,7 +19,7 @@ from databricks.sdk import WorkspaceClient
 # --- config (mirrors ../config.yaml) ---------------------------------------
 PROFILE = os.environ.get("DATABRICKS_PROFILE", "DEFAULT")
 WAREHOUSE_ID = os.environ.get("WAREHOUSE_ID", "")
-SCHEMA_FQN = os.environ.get("SCHEMA_FQN", "main.attach_war_room")
+SCHEMA_FQN = os.environ.get("SCHEMA_FQN", "bolttech_workshop_demo.attach_war_room")
 SQL_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "generate_data.sql")
 
 WAIT = "50s"

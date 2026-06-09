@@ -22,7 +22,7 @@ import lakebase  # noqa: E402
 PROFILE = lakebase.PROFILE
 DATABASE = lakebase.DATABASE
 WAREHOUSE_ID = os.environ.get("WAREHOUSE_ID", "")
-DELTA_SCHEMA = os.environ.get("SCHEMA_FQN", "main.attach_war_room")
+DELTA_SCHEMA = os.environ.get("SCHEMA_FQN", "bolttech_workshop_demo.attach_war_room")
 SCHEMA_SQL = os.path.join(os.path.dirname(os.path.abspath(__file__)), "schema.sql")
 
 

@@ -64,7 +64,7 @@ databricks auth login --profile myws --host https://<your-workspace-host>
 # 3. run the installer
 uv run --with databricks-sdk --with psycopg2-binary install.py \
     --profile myws \
-    --catalog attach_war_room \
+    --catalog bolttech_workshop_demo \
     --schema attach_war_room
 ```
 
@@ -72,7 +72,7 @@ Either way, ~10–15 minutes later (most of it Lakebase provisioning) it prints:
 
 ```
 ✅ Done.
-   schema:   attach_war_room.attach_war_room
+   schema:   bolttech_workshop_demo.attach_war_room
    genie:    01f1...
    lakebase: attach-war-room-db (instance-....database.cloud.databricks.com)
    app:      attach-war-room  https://attach-war-room-....databricksapps.com
@@ -103,7 +103,7 @@ Captured ids are written to `install_state.json` so re-runs and `--only` steps s
 | Flag | Default | Notes |
 |---|---|---|
 | `--profile` | `DEFAULT` | Databricks CLI auth profile for the target workspace. |
-| `--catalog` | `attach_war_room` | Created if you can; otherwise must already exist. |
+| `--catalog` | `bolttech_workshop_demo` | Created if you can; otherwise must already exist. |
 | `--schema` | `attach_war_room` | Schema for tables + metric views. |
 | `--warehouse-id` | *(auto)* | First serverless warehouse if omitted. |
 | `--lakebase-instance` | `attach-war-room-db` | Provisioned instance name. |
@@ -124,7 +124,7 @@ piece: `install.py --profile myws --catalog ... --schema ... --only app`.
 
 ```bash
 uv run --with databricks-sdk --with psycopg2-binary install.py \
-    --profile myws --catalog attach_war_room --schema attach_war_room \
+    --profile myws --catalog bolttech_workshop_demo --schema attach_war_room \
     --teardown --drop-schema       # omit --drop-schema to keep the data
 ```
 
