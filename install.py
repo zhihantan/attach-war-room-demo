@@ -222,17 +222,53 @@ def step_metrics(ctx):
     log("  metric views ok")
 
 
+GENIE_TITLE = "Acme Attach War-Room — Conversion & Profitability"
+
+
+def _find_genie_space(w, space_id, title):
+    """Return an existing space id to reuse (idempotency, so re-runs don't pile up duplicate
+    spaces): a previously-captured id that still exists, else any space with our exact title
+    (a prior run that created the space but didn't persist its id). '' if none → create fresh."""
+    if space_id:
+        try:
+            w.genie.get_space(space_id)
+            return space_id
+        except Exception:
+            pass
+    try:
+        token = None
+        while True:
+            resp = w.genie.list_spaces(page_token=token) if token else w.genie.list_spaces()
+            for s in (getattr(resp, "spaces", None) or []):
+                if getattr(s, "title", None) == title:
+                    return s.space_id
+            token = getattr(resp, "next_page_token", None)
+            if not token:
+                break
+    except Exception:
+        pass
+    return ""
+
+
 def step_genie(ctx):
     import dbx
+    w = dbx.ws()
+    # idempotency: reuse an existing space rather than create a duplicate on re-run / Run-All
+    existing = _find_genie_space(w, ctx.genie_space_id, GENIE_TITLE)
+    if existing:
+        ctx.genie_space_id = existing
+        os.environ["GENIE_SPACE_ID"] = ctx.genie_space_id
+        ctx.save()
+        log(f"  reusing existing Genie space: {ctx.genie_space_id}")
+        return
     # build the serialized_space (bakes in the schema's partner names + example SQL)
     built = subprocess.run([sys.executable, os.path.join(HERE, "01_metric_views_and_genie", "build_genie_space.py")],
                            capture_output=True, text=True, env={**os.environ})
     if built.returncode != 0:
         raise RuntimeError("build_genie_space.py failed:\n" + built.stderr[-800:])
     serialized = built.stdout.strip()
-    w = dbx.ws()
     sp = w.genie.create_space(warehouse_id=ctx.warehouse_id, serialized_space=serialized,
-                              title="Acme Attach War-Room — Conversion & Profitability",
+                              title=GENIE_TITLE,
                               description="Diagnose embedded-checkout attach/conversion + loss-ratio guardrail (synthetic).",
                               parent_path=ctx.args.genie_parent)
     ctx.genie_space_id = sp.space_id
@@ -242,13 +278,21 @@ def step_genie(ctx):
 
 
 def _wait_instance(w, name, target="AVAILABLE", timeout=1200):
+    # states from which the instance will NOT reach AVAILABLE by waiting — fail fast with a
+    # clear, actionable message instead of polling out the full timeout (which masks the cause).
+    fatal = {"DELETING", "STOPPED", "FAILING_OVER"}
     t0 = time.time()
     while True:
         inst = w.database.get_database_instance(name=name)
         state = getattr(inst.state, "value", str(inst.state))
         if state == target:
             return inst
-        if state in ("FAILING_OVER",) or time.time() - t0 > timeout:
+        if state in fatal:
+            raise RuntimeError(
+                f"lakebase instance {name} is in terminal state {state} and won't reach {target}. "
+                f"Purge it first — `databricks database delete-database-instance {name} --purge` "
+                f"(or install.py --teardown) — then re-run.")
+        if time.time() - t0 > timeout:
             raise TimeoutError(f"instance {name} state={state} after {int(time.time()-t0)}s")
         log(f"    lakebase {name}: {state} …", end="\r")
         time.sleep(10)
@@ -402,6 +446,24 @@ def _write_app_yaml(ctx):
         log(f"  uploaded app.yaml -> {ws_path}")
 
 
+def _resolve_app_sp(w, name, app):
+    """The app's RUNTIME identity is service_principal_client_id (NOT oauth2_app_client_id) —
+    it's what the app authenticates as, so UC + Lakebase grants and PGUSER must all target it.
+    It can be unpopulated until the app's compute is provisioned, so poll briefly; if it never
+    appears, fall back LOUDLY (a silent fallback to the wrong id => runtime PERMISSION_DENIED)."""
+    sp = getattr(app, "service_principal_client_id", None)
+    for _ in range(6):
+        if sp:
+            return sp, True
+        time.sleep(10)
+        app = w.apps.get(name=name)
+        sp = getattr(app, "service_principal_client_id", None)
+    log("  ⚠ service_principal_client_id not populated yet — falling back to oauth2_app_client_id. "
+        "If the app later hits UC or Postgres permission errors, re-run `--only app` once it is "
+        "fully provisioned so grants + PGUSER target the real runtime SP.")
+    return getattr(app, "oauth2_app_client_id", None), False
+
+
 def step_app(ctx):
     import dbx
     import databricks.sdk.service.apps as ap
@@ -417,9 +479,9 @@ def step_app(ctx):
     # service_principal_client_id — NOT oauth2_app_client_id. This is the identity to
     # grant UC + Lakebase access and to set as PGUSER. The DB-resource binding also
     # auto-provisions this SP's Postgres role.
-    ctx.app_sp = getattr(app, "service_principal_client_id", None) or app.oauth2_app_client_id
+    ctx.app_sp, sp_ok = _resolve_app_sp(w, ctx.app_name, app)
     ctx.save()
-    log(f"  app service principal: {ctx.app_sp}")
+    log(f"  app service principal: {ctx.app_sp}{'' if sp_ok else '  (FALLBACK)'}")
 
     # 2. bind resources to the app (warehouse, FMAPI serving endpoints, Genie space, Lakebase db)
     resources = [
@@ -443,14 +505,19 @@ def step_app(ctx):
         log(f"  resource bind warning: {str(e)[:140]}")
 
     # 3. grant the app SP UC read on the schema (so it can query the metric views/tables)
+    uc_ok = 0
     for stmt in (f"GRANT USE CATALOG ON CATALOG {ctx.catalog} TO `{ctx.app_sp}`",
                  f"GRANT USE SCHEMA ON SCHEMA {ctx.schema_fqn} TO `{ctx.app_sp}`",
                  f"GRANT SELECT ON SCHEMA {ctx.schema_fqn} TO `{ctx.app_sp}`"):
         try:
-            _exec(dbx, stmt)
+            _exec(dbx, stmt); uc_ok += 1
         except Exception as e:
             log(f"  UC grant skip: {str(e)[:80]}")
-    log("  granted app SP UC SELECT on the schema")
+    if uc_ok == 3:
+        log("  granted app SP UC USE CATALOG + USE SCHEMA + SELECT on the schema")
+    else:
+        log(f"  ⚠ UC grants partial ({uc_ok}/3) — the app may hit PERMISSION_DENIED on {ctx.schema_fqn}. "
+            f"If the catalog is owned by someone else, have its owner grant USE/SELECT to {ctx.app_sp}, then re-run `--only app`.")
 
     # 4. register the app SP as a Lakebase Postgres role + grant table privileges (best-effort)
     _grant_app_sp_pg(ctx, dbx, ctx.app_sp)
@@ -485,12 +552,18 @@ def step_reset(ctx):
     import dbx
     with dbx.cursor() as cur:
         cur.execute("UPDATE offer_config SET impression_enabled=false, version=1 WHERE partner_id='P01' AND device_tier='mid'")
+        broke_p01 = cur.rowcount
         cur.execute("UPDATE offer_config SET impression_enabled=true, version=1 WHERE NOT (partner_id='P01' AND device_tier='mid') AND impression_enabled=false")
         cur.execute("UPDATE offer_config SET deductible_tier_shown='high', version=1 WHERE partner_id='P02'")
+        broke_p02 = cur.rowcount
         for t in ("scenarios", "offer_config_audit"):
             cur.execute(f"TRUNCATE TABLE {t}")
         cur.execute("DELETE FROM chat_messages")
-    log("  reset to broken-start state")
+    if broke_p01 and broke_p02:
+        log("  reset to broken-start state")
+    else:
+        log(f"  ⚠ reset matched no rows (P01/mid={broke_p01}, P02={broke_p02}) — the seeded partner ids "
+            f"may differ from P01/P02, so the demo may NOT open in its broken state. Check the Lakebase offer_config table.")
 
 
 def teardown(ctx):
