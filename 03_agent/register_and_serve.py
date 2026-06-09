@@ -59,7 +59,7 @@ sys.path.insert(0, THIS_DIR)
 import mlflow  # noqa: E402
 
 # --- configuration (all env-overridable) -----------------------------------
-UC_CATALOG = os.environ.get("UC_CATALOG", "main")
+UC_CATALOG = os.environ.get("UC_CATALOG", "bolttech_workshop_demo")
 UC_SCHEMA = os.environ.get("UC_SCHEMA", "attach_war_room")
 UC_MODEL_NAME = os.environ.get("UC_MODEL_NAME", "attach_war_room_agent")
 REGISTERED_MODEL = f"{UC_CATALOG}.{UC_SCHEMA}.{UC_MODEL_NAME}"

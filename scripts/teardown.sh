@@ -8,7 +8,7 @@
 #   1. The Databricks App        (attach-war-room)            — IRREVERSIBLE
 #   2. The PROVISIONED Lakebase  instance (attach-war-room-db)   — IRREVERSIBLE
 #      (drops the offer_config serving table + all state tables + their data)
-#   3. OPTIONAL: the Unity Catalog schema (main.attach_war_room)
+#   3. OPTIONAL: the Unity Catalog schema (bolttech_workshop_demo.attach_war_room)
 #      — the 9 governed Delta tables + the 2 metric views. OFF by default.
 #
 # Requires typing the word  DELETE  to confirm. Rebuild with:
@@ -16,14 +16,14 @@
 #
 # This does NOT delete the Genie space (cheap, no idle compute) — remove it by
 # hand if you want a truly clean slate:
-#   databricks api delete /api/2.0/genie/spaces/ -p <PROFILE>
+#   databricks api delete /api/2.0/genie/spaces/<SPACE_ID> -p <PROFILE>
 # =============================================================================
 set -euo pipefail
 
 PROFILE="${PROFILE:-DEFAULT}"
 APP_NAME="${APP_NAME:-attach-war-room}"
 LAKEBASE_INSTANCE="${LAKEBASE_INSTANCE:-attach-war-room-db}"
-SCHEMA_FQN="${SCHEMA_FQN:-main.attach_war_room}"
+SCHEMA_FQN="${SCHEMA_FQN:-bolttech_workshop_demo.attach_war_room}"
 WAREHOUSE_ID="${WAREHOUSE_ID:-}"
 # Set DROP_SCHEMA=1 to ALSO drop the UC schema + all Delta tables/metric views.
 DROP_SCHEMA="${DROP_SCHEMA:-0}"

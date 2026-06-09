@@ -28,7 +28,7 @@ workspace remotely. First-time setup: install the
 
 ```bash
 git clone https://github.com/zhihantan/attach-war-room-demo.git
-cd attach-war-room
+cd attach-war-room-demo
 databricks auth login --profile myws --host https://<your-workspace-host>
 uv run --with databricks-sdk --with psycopg2-binary install.py \
     --profile myws --catalog bolttech_workshop_demo --schema attach_war_room
@@ -46,7 +46,7 @@ Beyond the core hero flow, the demo includes a hardening + UX pass. Highlights:
 - **Demo-day reliability (Tier 0):** one-click in-app **Reset** (header `↺`) + `POST /api/reset`; **parameterized warehouse SQL** (the f-string injection vector is gone — bound `:params` + allow-listed enums); **cached Lakebase OAuth token + a connection pool** (the per-call control-plane round-trip is gone); real **loading / error / empty states**; persistence failures now **surface** instead of silently losing memory; per-tool **timeouts**; and a **break-glass offline mode** (`DEMO_OFFLINE=1`) that replays the hero flow from fixtures when the backend is unreachable.
 - **Wow (Tier 1):** the recovered-GWP tile **counts up** and the checkout **pulses** on ship; **four one-click demo branches** (incl. the **guardrail-block** as a first-class beat); an **annualized ROI** line on the tile; the agent's reasoning now **streams token-by-token** with a friendly **step ledger**; a **decision/audit timeline**; and a **cold-open "silent GWP leak" banner**.
 - **Credibility (Tier 2):** the loss-ratio elasticity is now **derived from the claims book** (no more hardcoded `1.12`); a **`scan_for_anomalies`** tool makes the agent **find** the broken partner itself (activates the previously-dead `alert_thresholds`); a **`rollback_offer_change`** ACID undo; a **"Verify in Genie"** trust reveal; an **automated Genie eval harness**; **observability** (timed structured logs); **MLflow `ResponsesAgent` + Agent Evaluation** scripts; a **Lakebase branching** script; and **combined-ratio** data depth (commission/ceded/expense → `combined_ratio` measure).
-- **Reuse & trust (Tier 3):** a re-skinnable **`demo_profile`** layer (`config/demo_profile.json`, fictional variant ready) so this becomes a 1-day re-skin for the next account; **`COMPLIANCE.md`** + a fictional-partner profile (named-real-partner risk); **`docs/BRING_YOUR_OWN_DATA.md`** onboarding contract; **local-currency** rendering; **demo telemetry** (`demo_events`); **cost/teardown** scripts; and an **`ONBOARDING.md`** runbook.
+- **Reuse & trust (Tier 3):** a re-skinnable **`demo_profile`** layer (`config/demo_profile.json` — already fictional) so this becomes a 1-day re-skin for the next account; **`COMPLIANCE.md`** (every named entity is fictional); **`docs/BRING_YOUR_OWN_DATA.md`** onboarding contract; **local-currency** rendering; **demo telemetry** (`demo_events`); **cost/teardown** scripts; and an **`ONBOARDING.md`** runbook.
 - **Product walkthrough:** a welcome-modal carousel on first entry (story → loop → 4 ingredients → try a branch), replayable via the header `?`, content driven by the profile.
 
 ## The four ingredients (all load-bearing)
@@ -55,7 +55,7 @@ Beyond the core hero flow, the demo includes a hardening + UX pass. Highlights:
 |---|---|---|
 | **Agent** (tool-calling loop on FMAPIs) | Stateful diagnose→scan→shadow-test→approve→ship→rollback→verify loop; 14 tools; streamed reasoning; Lakebase chat memory | Turns "attach fell" into a shipped, governed fix in one sitting |
 | **AI/BI Genie** on **metric views** | `funnel_metrics` + `profitability_metrics`: diagnostic engine + governed sim baseline + reconciliation | One source of truth for attach/conversion/GWP/loss-ratio across partners, markets, currencies |
-| **Lakebase** (Autoscaling Postgres) | Checkout-latency `offer_config` serving + agent/app state; approved change = **multi-table ACID write** | The realistic low-latency serving layer a partner checkout reads — a warehouse cannot |
+| **Lakebase** (Provisioned Postgres) | Checkout-latency `offer_config` serving + agent/app state; approved change = **multi-table ACID write** | The realistic low-latency serving layer a partner checkout reads — a warehouse cannot |
 | **Foundation Model APIs** | Agent reasoning (`claude-sonnet-4-6`) + abandonment-cause **classification** (`claude-haiku-4-5`) | LLM intelligence doing real decision work, not just narration |
 
 ## Architecture
@@ -96,7 +96,7 @@ First-run shows a **welcome carousel** (replay any time via the header `?`). Def
 
 **Commercial close (ROI):** the tile annualizes one recovered anomaly to **~$98k/yr** — and this is **one of three** planted anomalies across a 12-partner book; recurring attach leaks compound across partners, markets and currencies.
 
-To re-run: click **`↺ Reset`** in the header (or `POST /api/reset`) — restores the broken-Velora Telecom start and clears run state instantly. No backend step needed.
+To re-run: click **`↺ Reset`** in the header (or `POST /api/reset`) — it restores the broken-Velora Telecom start and clears run state server-side (a Lakebase UPDATE/TRUNCATE) instantly. No manual/CLI step needed.
 
 ## Verified build environment (AWS · us-east-1)
 
@@ -104,15 +104,15 @@ To re-run: click **`↺ Reset`** in the header (or `POST /api/reset`) — restor
 |---|---|
 | Workspace | `https://YOUR-WORKSPACE.cloud.databricks.com` (profile `DEFAULT`) |
 | Data namespace | `bolttech_workshop_demo.attach_war_room` (catalog `bolttech_workshop_demo`, schema `attach_war_room` — see `config.yaml`) |
-| SQL warehouse | Serverless Starter Warehouse (``) |
+| SQL warehouse | Serverless Starter Warehouse (auto-resolved by `install.py`) |
 | FMAPIs | `databricks-claude-sonnet-4-6` (agent), `databricks-claude-haiku-4-5` (classify) |
-| Lakebase | Autoscaling project `attach-war-room` → `production`/`primary`, db `attach_war_room` |
-| Genie space | `` |
+| Lakebase | Provisioned instance `attach-war-room-db`, db `attach_war_room` |
+| Genie space | created per-install by `install.py` |
 
 ## Repo layout & run order
 
 ```
-attach-war-room/
+attach-war-room-demo/
 ├── install.py                   # ← one-command installer (local CLI)
 ├── setup_notebook.py            # ← in-workspace setup notebook (Git folder → Run All)
 ├── config.yaml                  # reference config (defaults)
@@ -133,7 +133,8 @@ uv run --with databricks-sdk 00_setup/run_setup.py
 # 1. metric views + Genie space
 uv run --with databricks-sdk 01_metric_views_and_genie/run_sql.py 01_metric_views_and_genie/metric_views.sql
 uv run --with databricks-sdk 01_metric_views_and_genie/build_genie_space.py > /tmp/ss.json   # then POST (see 01 README)
-# 2. lakebase
+# 2. lakebase  (note: setup_lakebase.py is the older autoscaling/dev variant; the deployed App uses
+#    the PROVISIONED instance, which install.py provisions — see 02_lakebase/setup_provisioned.py)
 uv run --with databricks-sdk --with psycopg2-binary 02_lakebase/setup_lakebase.py
 # 3. agent (CLI)
 uv run --with databricks-sdk --with openai --with psycopg2-binary 03_agent/agent.py "Why did attach drop for Velora Telecom mid-tier?"
@@ -143,23 +144,23 @@ DATABRICKS_PROFILE=DEFAULT uv run --with fastapi --with "uvicorn[standard]" --wi
 ```
 
 ## Production hardening (where Acme would change things for prod)
-- **FMAPIs → provisioned throughput** for checkout-path SLAs/throughput; already routed via **AI Gateway** (`AI_GATEWAY_URL`) for token metering, inference tables, and guardrails. Batch scoring via **AI Functions** (`ai_query`).
+- **FMAPIs → provisioned throughput** for checkout-path SLAs/throughput; optionally routed via **AI Gateway** (set `AI_GATEWAY_URL` — off by default) for token metering, inference tables, and guardrails. Batch scoring via **AI Functions** (`ai_query`).
 - **Agent → MLflow `ResponsesAgent`** — scaffolded in `03_agent/responses_agent.py` + `register_and_serve.py` (register to UC + serve) + `eval_agent.py` (Agent Evaluation). The tool layer is unchanged.
 - **Shadow-sim → trained attach-propensity model** (Mosaic AI) behind the same `run_shadow_sim` tool. The demo's sim is deterministic and defensible — and the loss-ratio elasticity is now **derived from the claims book**, not hardcoded.
 - **Lakebase → continuous synced tables** (reverse-ETL) instead of the snapshot seed; read replicas for checkout QPS; **branching to stage candidate configs** demonstrated in `02_lakebase/branch_demo.py`. Connection pooling + token caching are in `dbx.py`.
 - **Governance & scale**: combined-ratio depth (`combined_ratio` measure) added; demo self-telemetry in `demo_events`; UC lineage from decision → audit → served value; multi-region, multi-currency modeled and now rendered in local currency.
 
 ### Cost & lifecycle
-An always-on App + a **provisioned** Lakebase (does **not** scale to zero) + a serverless warehouse bill 24/7 between engagements. Use `scripts/pause_demo.sh` to stop the app + downscale Lakebase, `resume_demo.sh` to bring it back, and `scripts/teardown.sh` / `rebuild.sh` for full lifecycle. Size exact $ with Quicksizer/Lakemeter. See `ONBOARDING.md` to stand it up in a new workspace and `COMPLIANCE.md` before showing it externally (fictional-partner profile recommended).
+An always-on App + a **provisioned** Lakebase (does **not** scale to zero) + a serverless warehouse bill 24/7 between engagements. Use `scripts/pause_demo.sh` to stop the app + downscale Lakebase, `resume_demo.sh` to bring it back, and `scripts/teardown.sh` / `rebuild.sh` for full lifecycle. Size exact $ with Quicksizer/Lakemeter. See `ONBOARDING.md` to stand it up in a new workspace and `COMPLIANCE.md` before showing it externally (all named entities are already fictional).
 
 ## Build status — ✅ complete & validated end-to-end
 - [x] **00 — Data foundation** — 9 governed Delta tables (300k sessions, 60k policies, 7k claims); 3 funnel anomalies + a >85% loss-ratio trap tier; abandonment text clusters
 - [x] **01 — Metric views + Genie** — 2 metric views; Genie space (8 objects, 6-rule instruction, 8 verified example SQL, 10 SQL benchmarks); hero question validated live
-- [x] **02 — Lakebase** — Autoscaling `attach-war-room`; serving `offer_config` synced + state tables; ACID ship validated; opens in the broken state
-- [x] **03 — Agent** — tool-calling loop (11 tools), deterministic shadow-sim, Lakebase memory; full diagnose→ship flow validated
+- [x] **02 — Lakebase** — Provisioned instance `attach-war-room-db`; serving `offer_config` synced + state tables; ACID ship validated; opens in the broken state
+- [x] **03 — Agent** — tool-calling loop (14 tools), deterministic shadow-sim, Lakebase memory; full diagnose→ship flow validated
 - [x] **04 — App** — FastAPI + React single app; browser-validated locally AND **deployed live to Databricks Apps** (provisioned Lakebase, SP resource-bindings + grants applied); full hero flow validated end-to-end as the SP (recovered GWP $8,192/mo, 0 console/network errors)
 - [x] **README + EVAL**
-- [x] **Live deployment** — app running at the URL above; demo state reset to the broken-Velora Telecom start
+- [x] **Reproducible deploy** — `install.py` deploys the App and resets the demo to the broken-Velora Telecom start; validated end-to-end
 
 ## Data & safety
-All data is **synthetic** (deterministic hash-based generation; reproducible). No real customers, PII, carriers, or partner-confidential data. ✅ **The demo runs with FICTIONAL partner names** (Velora Telecom, Siam Mobile Care, Rift Valley Bank, Savanna Mobile, …); the exchange operator stays **Acme** (the customer the demo was built for — it carries no fabricated metric, so it is not a brand/defamation concern) — so no real company is ever shown attached to a fabricated loss ratio or "broken funnel." This is the **active default everywhere** (data, profile, Genie space, agent, offline fixtures); `partner_id` codes `P01`–`P12` are unchanged, so all anomalies/joins/EVAL hold. The real-name profile is preserved at `config/demo_profile.Acme.json` for reference. *(This project was built for Acme; "Acme" appears only as the engagement/account context in these internal docs, never as a partner with fabricated metrics.)* See **`COMPLIANCE.md`** for the full posture and pre-demo checklist.
+All data is **synthetic** (deterministic hash-based generation; reproducible). No real customers, PII, carriers, or partner-confidential data. **Every named entity is fictional** — the exchange operator (**Acme Embedded Insurance**) and all distribution partners (Velora Telecom, Siam Mobile Care, Rift Valley Bank, Savanna Mobile, …) are invented, so no real company is ever shown attached to a fabricated loss ratio or "broken funnel." This fictional set is the **active default everywhere** (data, profile, Genie space, agent, offline fixtures); `partner_id` codes `P01`–`P12` are unchanged, so all anomalies/joins/EVAL hold. To re-skin to a different account, edit `config/demo_profile.json` and regenerate the data with matching names. See **`COMPLIANCE.md`** for the full posture and pre-demo checklist.

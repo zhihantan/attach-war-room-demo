@@ -30,7 +30,7 @@ databricks api post /api/2.0/genie/spaces --profile DEFAULT --json @/tmp/create_
 uv run --with databricks-sdk 01_metric_views_and_genie/ask_genie.py "Why did attach rate drop for Velora Telecom mid-tier devices in Italy?" <space_id>
 ```
 
-**Live space:** `` → https://YOUR-WORKSPACE.cloud.databricks.com/genie/rooms/
+**Genie space:** created per-install by `install.py` (prints the id) → `https://YOUR-WORKSPACE.cloud.databricks.com/genie/rooms/<SPACE_ID>`
 
 ## `funnel_metrics` (grain: one checkout session; source `sessions` + joins to partners/markets/products)
 

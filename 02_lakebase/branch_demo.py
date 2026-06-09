@@ -167,7 +167,7 @@ def create_branch_autoscaling():
     """
     project = dbx.LAKEBASE_PROJECT
     parent_branch = dbx.LAKEBASE_BRANCH            # 'production'
-    cand_branch = os.environ.get("BRANCH_DEMO_BRANCH", "candidate-windtre-mid-on")
+    cand_branch = os.environ.get("BRANCH_DEMO_BRANCH", "candidate-velora-mid-on")
     print(f"  [autoscaling] would create projects/{project}/branches/{cand_branch} "
           f"copy-on-write from '{parent_branch}'")
     print(f"  [autoscaling] CLI: databricks postgres create-branch "

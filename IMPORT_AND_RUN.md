@@ -56,7 +56,7 @@ and provisions resources by driving your workspace **remotely** via the Databric
 ```bash
 # 1. clone the repo and enter it
 git clone https://github.com/zhihantan/attach-war-room-demo.git
-cd attach-war-room
+cd attach-war-room-demo
 
 # 2. authenticate to YOUR workspace (opens a browser; pick any profile name)
 databricks auth login --profile myws --host https://<your-workspace-host>

@@ -3,9 +3,11 @@
 > **Goal:** a second SA, who has never touched this repo, can stand it up in **their own** Databricks
 > workspace and run the on-stage demo in **~30 minutes**. Copy-paste friendly. Real paths, real commands.
 >
-> **All data is synthetic.** No real PII or partner-confidential data. Partner names (Velora Telecom, Siam Mobile Care,
-> Marina Mobile, Savanna Mobile, Brightway Electronics, Rift Valley Bank, …) are real *company* names used illustratively on synthetic data — see
-> [Re-skin](#3-re-skin-rename-rebrand) if you need fictional names for an external audience.
+> **All data is synthetic.** No real PII or partner-confidential data. Every named entity is **fictional** — the
+> operator (**Acme Embedded Insurance**) and all partners (Velora Telecom, Siam Mobile Care, Marina Mobile, Savanna
+> Mobile, Brightway Electronics, Rift Valley Bank, …) are invented, and this fictional set is the active default
+> everywhere (data, profile, Genie space, agent, fixtures) — safe to show externally as-is. See
+> [Re-skin](#3-re-skin-rename-rebrand) only if you want to rebrand to a *different* account.
 
 What you're shipping: a single **Databricks App** (FastAPI + React) where a growth lead asks *"why did attach
 drop in the Velora Telecom flow?"*, the agent localizes the broken funnel stage, **shadow-tests** a fix against a
@@ -47,7 +49,7 @@ databricks current-user me --profile DEFAULT      # sanity check: prints your em
 
 Repo root for every command below:
 ```bash
-export AWR=/Users/zhihan.tan/Documents/AI_Agents/insurtech_agent/attach-war-room
+export AWR=$(pwd)      # run from the cloned repo root (the dir git clone created: attach-war-room-demo)
 ```
 
 ---
@@ -82,7 +84,6 @@ Everything workspace-specific is centralized. There are **two** files of record 
 | `lakebase.host` | `<lakebase-host>` | your instance's Postgres host (printed by step 2) |
 | `genie.space_id` | `` | filled in after you create the space in step 1 |
 | `foundation_models.agent` / `.classifier` | `databricks-claude-sonnet-4-6` / `databricks-claude-haiku-4-5` | the model names your workspace serves |
-| `deployment.service_principal` | `<app-service-principal>` | your app's SP id (Databricks mints this when you `apps create`) |
 
 > The Python helpers read **env vars first**, falling back to these defaults. So the lowest-friction path is to
 > `export DATABRICKS_PROFILE=… WAREHOUSE_ID=… SCHEMA_FQN=…` before running them (they all honor those three).
@@ -97,7 +98,7 @@ Everything workspace-specific is centralized. There are **two** files of record 
 | `WAREHOUSE_ID` | `` | your warehouse ID |
 | `GENIE_SPACE_ID` | `` | your Genie space id (from step 1) |
 | `MODEL_AGENT` / `MODEL_CLASSIFIER` | sonnet-4-6 / haiku-4-5 | your served model names |
-| `AI_GATEWAY_URL` | `https://<workspace-id>.ai-gateway…` | your workspace AI Gateway URL (or **delete the line** to use the direct FMAPI path — `dbx.py` falls back to `serving_endpoints.get_open_ai_client()`) |
+| `AI_GATEWAY_URL` | *(not set — optional)* | **Optional, off by default** (`app.yaml` ships it commented out; `install.py` doesn't emit it). Set it only to route FMAPI calls via AI Gateway; otherwise `dbx.py` uses the direct path (`serving_endpoints.get_open_ai_client()`). |
 | `LAKEBASE_INSTANCE` | `attach-war-room-db` | your instance name |
 | `PGDATABASE` | `attach_war_room` | your DB |
 | `PGHOST` | `<lakebase-host>` | your instance Postgres host |
@@ -121,23 +122,23 @@ export PGDATABASE=<your_db>
 
 ### 3. Re-skin (rename / rebrand)
 All branding (account name, persona, partner display names, demo branches, walkthrough copy, theme color,
-currencies) lives in **one** JSON: `$AWR/config/demo_profile.json` (active default = **Acme**, real names).
+currencies) lives in **one** JSON: `$AWR/config/demo_profile.json` (active default = **Acme** operator + **fictional** partner names).
 
 - **Quick text-only re-skin** (account name, tagline, theme, walkthrough): edit `config/demo_profile.json` in
   place and rebuild the frontend. No data regen needed.
-- **Full re-skin to fictional partner names:** copy → edit → point at it via env:
+- **Full re-skin to a NEW account's partner set:** copy → edit → point at it via env:
   ```bash
-  cp $AWR/config/demo_profile.json $AWR/config/demo_profile.fictional.json
-  # edit names/markets/persona/branches in the .fictional.json
-  export DEMO_PROFILE_PATH=$AWR/config/demo_profile.fictional.json   # resolution order: this wins
+  cp $AWR/config/demo_profile.json $AWR/config/demo_profile.<account>.json
+  # edit names/markets/persona/branches in the new file
+  export DEMO_PROFILE_PATH=$AWR/config/demo_profile.<account>.json   # resolution order: this wins
   ```
   Profile resolution order (first hit wins): `$DEMO_PROFILE_PATH` → `./demo_profile.json` (vendored next to
   `profile.py`) → `../config/demo_profile.json` → embedded `DEFAULT`.
   > **Important:** the *demo branches* (e.g. "Velora Telecom · impressions broke") reference partner names that must
-  > exist in the data. The **current live data uses REAL partner names.** If you rename partners in the profile,
-  > you must **regenerate the data with matching names** (edit the partner INSERTs in `00_setup/generate_data.sql`
-  > and re-run step 4.0) or the one-click branches won't resolve. A text-only re-skin that keeps the same partner
-  > names works without a regen.
+  > exist in the data. The shipped data already uses the active profile's **fictional** names, so the one-click
+  > branches resolve out of the box. If you rename partners to a **different** set, you must **regenerate the data
+  > with matching names** (edit the partner INSERTs in `00_setup/generate_data.sql` and re-run step 4.0) or the
+  > branches won't resolve. A text-only re-skin that keeps the same partner names works without a regen.
 
 ---
 
@@ -160,7 +161,7 @@ uv run --with databricks-sdk \
 
 # (b) build the serialized space, then POST it to create the Genie space
 uv run --with databricks-sdk $AWR/01_metric_views_and_genie/build_genie_space.py > /tmp/awr_space.json
-jq -n --arg title "Attach War-Room — Conversion & Profitability" \
+jq -n --arg title "Acme Attach War-Room — Conversion & Profitability" \
   --arg description "Diagnose embedded-checkout attach/conversion; watch the loss-ratio guardrail." \
   --arg parent_path "/Workspace/Users/$(databricks current-user me --profile DEFAULT | jq -r .userName)" \
   --arg warehouse_id "<YOUR_WAREHOUSE_ID>" \
@@ -350,7 +351,7 @@ triggers the guardrail block.
 ### Repo map (where things live)
 ```
 config.yaml                         build-script source of truth (host/profile/warehouse/schema/genie/lakebase/SP)
-config/demo_profile.json            the re-skin layer (active = Acme, real names)
+config/demo_profile.json            the re-skin layer (active = Acme operator + fictional partner names)
 00_setup/run_setup.py               data foundation (runs generate_data.sql)
 01_metric_views_and_genie/run_sql.py        generic {{S}} SQL runner (EXISTS; README list omits it)
 01_metric_views_and_genie/build_genie_space.py / ask_genie.py   Genie create + validate

@@ -25,7 +25,7 @@ PARTNERS = [
 ]
 _MARKET = {"P01": "Italy", "P02": "Thailand", "P03": "Singapore", "P04": "Kenya", "P05": "United Kingdom", "P08": "Kenya"}
 
-_WINDTRE_FUNNEL = {
+_VELORA_FUNNEL = {
     "partner": "Velora Telecom", "device_tier": "mid", "largest_stage_drop": "offer_show_rate",
     "prior": {"offer_show_rate": 0.865, "quote_start_rate": 0.62, "quote_complete_rate": 0.72,
               "complete_to_bind_rate": 0.56, "activation_rate": 0.96, "attach_rate": 0.223, "sessions": 41000},
@@ -46,7 +46,7 @@ def partners():
 
 
 def funnel(partner, device_tier="mid", recent_days=45):
-    base = dict(_WINDTRE_FUNNEL if (partner or "").lower().startswith("velora") else _GENERIC_FUNNEL)
+    base = dict(_VELORA_FUNNEL if (partner or "").lower().startswith("velora") else _GENERIC_FUNNEL)
     base["partner"] = partner
     base["device_tier"] = device_tier
     keys = ["offer_show_rate", "quote_start_rate", "quote_complete_rate", "complete_to_bind_rate", "activation_rate", "attach_rate"]
@@ -62,8 +62,8 @@ def loss_ratio(partner=None, device_tier=None, market_name=None):
 
 
 def checkout(partner, device_tier="mid"):
-    is_windtre = (partner or "").lower().startswith("velora")
-    shown = (not is_windtre) or _STATE["shipped"]
+    is_velora = (partner or "").lower().startswith("velora")
+    shown = (not is_velora) or _STATE["shipped"]
     return {"partner": partner, "device_tier": device_tier, "offer_shown": shown,
             "placement": "checkout_confirmation", "deductible_tier_shown": "std",
             "products_enabled": 5 if shown else 0, "products_total": 5, "configs": []}

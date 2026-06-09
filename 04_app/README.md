@@ -49,8 +49,8 @@ databricks apps deploy attach-war-room \
   --source-code-path /Workspace/Users/you@example.com/attach-war-room -p DEFAULT
 ```
 
-### Deployment status: LIVE ✓
-Deployed at **https://attach-war-room-<workspace-id>.aws.databricksapps.com** as its service principal. What was configured (all done):
+### What `install.py` configures
+`install.py` deploys the App (its URL — `https://attach-war-room-<workspace-id>.aws.databricksapps.com` — is printed at the end) to run as its service principal, and wires up:
 - **Resources bound** via `apps update`: SQL warehouse (CAN_USE) + both serving endpoints (CAN_QUERY).
 - **Lakebase**: a **provisioned** instance `attach-war-room-db` (Autoscaling lacks the SP-OAuth role API / app-resource binding in this Beta). The SP is registered as a `DatabaseInstanceRole` (superuser) via the SDK, plus explicit `public`-schema table grants.
 - **Unity Catalog**: `GRANT SELECT/USE` on `bolttech_workshop_demo.attach_war_room` to the SP.

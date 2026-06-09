@@ -73,7 +73,7 @@ def reset():
         # Velora Telecom (P01) mid-tier impressions OFF = the planted anomaly the demo opens on
         cur.execute("""UPDATE offer_config SET impression_enabled=false, version=1, updated_by='reset'
                        WHERE partner_id='P01' AND device_tier='mid'""")
-        windtre = cur.rowcount
+        velora = cur.rowcount
         # everything else ON (undo any shipped restore on other partners)
         cur.execute("""UPDATE offer_config SET impression_enabled=true, version=1, updated_by='reset'
                        WHERE NOT (partner_id='P01' AND device_tier='mid') AND impression_enabled=false""")
@@ -84,5 +84,5 @@ def reset():
         cur.execute("TRUNCATE TABLE scenarios")
         cur.execute("TRUNCATE TABLE offer_config_audit")
         cur.execute("DELETE FROM chat_messages")
-    telemetry.event("reset", {"windtre_configs_reset": windtre})
-    return {"reset": True, "windtre_configs_reset": windtre}
+    telemetry.event("reset", {"velora_configs_reset": velora})
+    return {"reset": True, "velora_configs_reset": velora}

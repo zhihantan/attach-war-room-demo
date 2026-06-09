@@ -476,7 +476,7 @@ def query_genie(question: str):
 
 def draft_partner_note(partner: str, context: str):
     """FMAPI: draft a concise, professional partner-facing note summarizing the finding and fix."""
-    msg = [{"role": "system", "content": "You are a Acme partnerships lead. Draft a concise, professional note (<=120 words) to a distribution partner summarizing a conversion finding and the corrective action taken. No fabricated numbers beyond those given."},
+    msg = [{"role": "system", "content": "You are an Acme partnerships lead. Draft a concise, professional note (<=120 words) to a distribution partner summarizing a conversion finding and the corrective action taken. No fabricated numbers beyond those given."},
            {"role": "user", "content": f"Partner: {partner}\nContext/numbers:\n{context}"}]
     note = dbx.chat(msg, model=dbx.MODEL_AGENT, max_tokens=320, temperature=0.3).choices[0].message.content
     return {"partner": partner, "note": note}

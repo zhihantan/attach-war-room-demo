@@ -12,7 +12,8 @@ Resolution order (first hit wins):
   3. ../config/demo_profile.json  ·  ../../config/demo_profile.json   (repo dev)
   4. the embedded DEFAULT below  (so the deployed App always works with no file)
 
-To re-skin: copy config/demo_profile.json -> config/demo_profile.fictional.json,
+The default profile is already fictional (Acme + invented partners). To re-skin to a
+NEW account: copy config/demo_profile.json -> config/demo_profile.<account>.json,
 edit names/markets/persona, set DEMO_PROFILE_PATH (and regenerate data with the
 matching partner names on the next rebuild — see docs/BRING_YOUR_OWN_DATA.md).
 """

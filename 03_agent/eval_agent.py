@@ -59,7 +59,7 @@ EXPERIMENT = os.environ.get("MLFLOW_EXPERIMENT", "/Shared/attach-war-room-agent"
 # ---------------------------------------------------------------------------
 EVAL_CASES = [
     {
-        "name": "windtre_impressions_hero",
+        "name": "velora_impressions_hero",
         "inputs": {"question": "Why did attach rate drop for Velora Telecom mid-tier in Italy, "
                                 "and what should we do about it?"},
         "expectations": {
@@ -70,7 +70,7 @@ EVAL_CASES = [
         },
     },
     {
-        "name": "samsung_bind_drop",
+        "name": "siam_bind_drop",
         "inputs": {"question": "Why did quote-to-bind conversion fall for Siam Mobile Care "
                                 "over the last 30 days?"},
         "expectations": {
@@ -81,7 +81,7 @@ EVAL_CASES = [
         },
     },
     {
-        "name": "kcb_activation_leak",
+        "name": "riftvalley_activation_leak",
         "inputs": {"question": "Where is policy activation leaking for Rift Valley Bank in Kenya, and why?"},
         "expectations": {
             # bind-to-activation ~95% -> ~69%; first-payment failures post-bind.
@@ -91,7 +91,7 @@ EVAL_CASES = [
         },
     },
     {
-        "name": "safaricom_guardrail_block",
+        "name": "savanna_guardrail_block",
         "inputs": {"question": "Shadow-test lowering the deductible for Savanna Mobile budget devices "
                                 "in Kenya and propose the fix."},
         "expectations": {

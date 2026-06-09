@@ -59,8 +59,8 @@ uv run --with databricks-sdk \
 if [[ "${SKIP_GENIE_SPACE}" == "1" ]]; then
   echo
   echo "[01/04] SKIP_GENIE_SPACE=1 — leaving the existing Genie space in place."
-  echo "        (Live space: . The metric views the"
-  echo "         space sits on were just rebuilt above, so it keeps working.)"
+  echo "        (The metric views the space sits on were just rebuilt above,"
+  echo "         so it keeps working.)"
 else
   echo
   echo "[01/04] Building serialized_space for the Genie space..."
