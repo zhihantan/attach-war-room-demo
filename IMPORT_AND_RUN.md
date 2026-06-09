@@ -38,7 +38,7 @@ Both run the **same** installer logic — pick whichever fits.
 
 ### Option A — in-workspace notebook (no local tools needed)
 
-1. In your Databricks workspace: **Create → Git folder** → `https://github.com/zhihantan/attach-war-room-demo-demo`.
+1. In your Databricks workspace: **Create → Git folder** → `https://github.com/zhihantan/attach-war-room-demo`.
 2. Open **`setup_notebook`** from the cloned folder; attach to **serverless** or a **cluster** (DBR 14+).
 3. Set the widgets at the top (catalog, schema, …) and **Run All**. ~10–15 min; it prints the App URL.
 
@@ -55,7 +55,7 @@ and provisions resources by driving your workspace **remotely** via the Databric
 
 ```bash
 # 1. clone the repo and enter it
-git clone https://github.com/zhihantan/attach-war-room-demo-demo.git
+git clone https://github.com/zhihantan/attach-war-room-demo.git
 cd attach-war-room
 
 # 2. authenticate to YOUR workspace (opens a browser; pick any profile name)

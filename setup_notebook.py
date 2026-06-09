@@ -8,7 +8,7 @@
 # MAGIC
 # MAGIC ### How to use
 # MAGIC 1. **Clone this repo into a Git folder**: Workspace → *Create → Git folder* →
-# MAGIC    `https://github.com/zhihantan/attach-war-room-demo-demo`.
+# MAGIC    `https://github.com/zhihantan/attach-war-room-demo`.
 # MAGIC 2. Open **`setup_notebook`** (this file) from the cloned folder.
 # MAGIC 3. Attach to **serverless** or a **cluster** (DBR 14+), set the widgets at the top, then **Run All**.
 # MAGIC 4. ~10–15 minutes later it prints the App URL.
@@ -22,7 +22,10 @@
 # MAGIC > runs the *same* installer logic, just in-workspace.
 
 # COMMAND ----------
-# MAGIC %pip install -q databricks-sdk psycopg2-binary
+# MAGIC %pip install -q --upgrade "databricks-sdk>=0.76" psycopg2-binary
+# MAGIC # NOTE: the version floor is required. DBR ships an older databricks-sdk, and an
+# MAGIC # unpinned `pip install databricks-sdk` is a no-op when any version is already present —
+# MAGIC # leaving a stale SDK whose Genie API lacks create_space (needed in step 4/7).
 
 # COMMAND ----------
 dbutils.library.restartPython()

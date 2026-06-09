@@ -15,7 +15,7 @@ all wired together with the right grants) in their own workspace. Nothing is har
 There are **two ways** to run it — pick whichever fits. Both run the *same* installer logic.
 
 ### Option A — from a notebook, inside your workspace (no local tools)
-1. In your Databricks workspace: **Create → Git folder** → `https://github.com/zhihantan/attach-war-room-demo-demo`.
+1. In your Databricks workspace: **Create → Git folder** → `https://github.com/zhihantan/attach-war-room-demo`.
 2. Open **`setup_notebook`** from the cloned folder, attach to serverless or a cluster (DBR 14+).
 3. Set the widgets at the top (catalog, schema, …) and **Run All** (~10–15 min). It authenticates as
    you and prints the App URL at the end. Nothing to install locally.
@@ -27,7 +27,7 @@ workspace remotely. First-time setup: install the
 [Databricks CLI](https://docs.databricks.com/dev-tools/cli/install.html) and [uv](https://docs.astral.sh/uv/).
 
 ```bash
-git clone https://github.com/zhihantan/attach-war-room-demo-demo.git
+git clone https://github.com/zhihantan/attach-war-room-demo.git
 cd attach-war-room
 databricks auth login --profile myws --host https://<your-workspace-host>
 uv run --with databricks-sdk --with psycopg2-binary install.py \
