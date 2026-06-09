@@ -1,0 +1,42 @@
+# NOTE: install.py GENERATES this file per-install with your workspace's values
+# (schema, warehouse, the new Genie space id, the Lakebase host, and the app's service
+# principal as PGUSER). The values below are placeholders so the repo is self-describing.
+command:
+  - "uvicorn"
+  - "app:app"
+  - "--host"
+  - "0.0.0.0"
+  - "--port"
+  - "8000"
+
+env:
+  - name: SCHEMA_FQN
+    value: "main.attach_war_room"
+  - name: WAREHOUSE_ID
+    value: ""                         # filled in by install.py
+  - name: GENIE_SPACE_ID
+    value: ""                         # the Genie space install.py creates
+  - name: MODEL_AGENT
+    value: "databricks-claude-sonnet-4-6"
+  - name: MODEL_CLASSIFIER
+    value: "databricks-claude-haiku-4-5"
+  # Optional: route FMAPI calls through an AI Gateway (token metering / inference tables /
+  # guardrails). Leave unset to call the serving endpoints directly.
+  # - name: AI_GATEWAY_URL
+  #   value: "https://<workspace-id>.ai-gateway.cloud.databricks.com/mlflow/v1"
+  - name: LAKEBASE_INSTANCE
+    value: "attach-war-room-db"
+  - name: LAKEBASE_TIER
+    value: "provisioned"
+  - name: PGDATABASE
+    value: "attach_war_room"
+  # PG* are set explicitly; dbx.py mints a fresh OAuth DB token via the SDK
+  # (generate_database_credential) per connection — PGPASSWORD is intentionally unset.
+  - name: PGHOST
+    value: "<lakebase-host>"          # filled in by install.py
+  - name: PGUSER
+    value: "<app-service-principal>"  # the app's service-principal client id (its Postgres role)
+  - name: PGPORT
+    value: "5432"
+  - name: PGSSLMODE
+    value: "require"

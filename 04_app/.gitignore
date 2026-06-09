@@ -1,0 +1,22 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.env
+
+# Node
+node_modules/
+npm-debug.log*
+.vite/
+
+# Keep frontend/dist for deployment — do NOT ignore it
+
+# IDE / OS
+.idea/
+.vscode/
+*.swp
+.DS_Store
+
+# Databricks
+.databricks/

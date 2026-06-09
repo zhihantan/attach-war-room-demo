@@ -1,0 +1,6 @@
+fastapi
+uvicorn[standard]
+psycopg2-binary
+openai
+databricks-sdk>=0.114.0
+pydantic

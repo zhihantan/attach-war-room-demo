@@ -1,0 +1,41 @@
+# Attach War-Room — reference configuration (defaults + structure).
+# NOTE: this file is documentation. The real entrypoint is install.py, which is fully
+# parameterized (pass --catalog/--schema/etc.) and writes the App's runtime env itself.
+# ALL DATA IS SYNTHETIC — no real PII, carriers, or partners (partner names are fictional).
+
+databricks:
+  host: https://YOUR-WORKSPACE.cloud.databricks.com   # your workspace
+  profile: DEFAULT              # local CLI auth profile (for the install.py local flow)
+  cloud: AWS
+  region: us-east-1
+  warehouse_id:                 # leave blank — install.py auto-resolves a serverless warehouse
+
+unity_catalog:
+  # If you can't CREATE CATALOG, point `catalog` at one you already have; install.py
+  # just creates the schema inside it. Fully parameterized via install.py flags.
+  catalog: main
+  schema: attach_war_room
+  fqn: main.attach_war_room
+
+foundation_models:
+  # Pay-per-token FMAPI endpoints. Production: switch to provisioned throughput.
+  agent: databricks-claude-sonnet-4-6       # tool-calling reasoning / orchestration
+  classifier: databricks-claude-haiku-4-5   # free-text abandonment-cause classification
+
+lakebase:
+  tier: provisioned             # provisioned instance — resource-bindable + DatabaseInstanceRole API (SP OAuth)
+  instance: attach-war-room-db  # created by install.py
+  database: attach_war_room
+  host:                         # populated by install.py after the instance is created
+  serving_table: offer_config   # seeded from the Delta golden copy; the agent writes approved changes here (ACID)
+  state_tables: [offer_config_audit, alert_thresholds, scenarios, chat_messages]
+
+deployment:
+  app_name: attach-war-room
+  # url, service principal, and resource bindings are all created by install.py.
+
+genie:
+  space_id:                     # a new Genie space is created by install.py
+  metric_views:
+    - main.attach_war_room.funnel_metrics        # funnel / attach / GWP
+    - main.attach_war_room.profitability_metrics # GWP / losses / loss ratio / frequency
