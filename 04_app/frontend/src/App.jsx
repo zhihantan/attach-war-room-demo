@@ -413,7 +413,7 @@ export default function App() {
   }
 
   const accent = profile?.theme?.accent || '#ff5a36'
-  const brandName = profile?.account?.name || 'Acme'
+  const brandName = profile?.account?.name || 'bolttech'
   const productName = profile?.account?.product || 'Attach War-Room'
   const branches = profile?.branches || []
   const followups = profile?.followups || []

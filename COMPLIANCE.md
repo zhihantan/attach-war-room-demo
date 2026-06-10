@@ -7,9 +7,11 @@ partner, or customer record. Everything it displays is generated locally from a 
 **TL;DR**
 1. The data is **fully synthetic and deterministic** — hash-generated from row indices, re-derivable
    from scratch, with **no PII schema** (no real people, names, emails, or identifiers — even fabricated ones).
-2. **Every entity is fictional** — the exchange operator (**Acme Embedded Insurance**) and *all*
-   distribution partners (Velora Telecom, Siam Mobile Care, Rift Valley Bank, Savanna Mobile, …) are
-   invented. No real company is shown attached to any metric, anomaly, or "broken funnel."
+2. **The operator is bolttech** (the real embedded-insurance company this demo was built for); **all
+   distribution partners are fictional** (Velora Telecom, Siam Mobile Care, Rift Valley Bank, Savanna
+   Mobile, … are invented). The synthetic figures describe the *demo* exchange, not any published bolttech
+   KPI — no fabricated metric is asserted of bolttech as fact, and no real partner is shown attached to a
+   fabricated loss ratio or "broken funnel."
 3. Every row is reproducible from `00_setup/generate_data.sql` — no external data source.
 
 ---
@@ -35,12 +37,12 @@ So even if the entire dataset leaked, there is no personal data in it to breach 
 
 ---
 
-## 2. Every named entity is fictional
+## 2. The operator is the real customer; every distribution partner is fictional
 
-The demo's narrative is that specific named partners are failing (an impressions bug, a price shock at bind, an activation leak, a loss-ratio trap). To avoid attaching a fabricated statement of fact to any **real** company, **every entity is invented**:
+The demo's narrative is that specific named partners are failing (an impressions bug, a price shock at bind, an activation leak, a loss-ratio trap). To avoid attaching a fabricated statement of fact to a real **partner**:
 
-- **Exchange operator:** *Acme Embedded Insurance* (fictional).
-- **Distribution partners** (`partners` table): *Velora Telecom, Siam Mobile Care, Marina Mobile, Savanna Mobile, Brightway Electronics, MegaTech Stores, EasyCredit Finance, Rift Valley Bank, BazaarOne, Thanon Telecom, Aquila Mobile, NovaPay* — all fictional.
+- **Exchange operator:** *bolttech* — the real embedded-insurance company this demo was built for. The synthetic numbers describe the demo exchange as a whole; no published bolttech KPI is reproduced and no fabricated metric is asserted of bolttech as a statement of fact, so it carries no brand/defamation concern.
+- **Distribution partners** (`partners` table): *Velora Telecom, Siam Mobile Care, Marina Mobile, Savanna Mobile, Brightway Electronics, MegaTech Stores, EasyCredit Finance, Rift Valley Bank, BazaarOne, Thanon Telecom, Aquila Mobile, NovaPay* — all **fictional/invented**, so no real partner is ever shown attached to a fabricated loss ratio or "broken funnel."
 - **Markets** are real countries (Italy, Thailand, Kenya, …) and **device models** reference generic consumer-electronics names; neither is attached to a defamatory claim.
 
 To re-skin for a specific account, edit `config/demo_profile.json` (account name, partner display names, branches, theme) and regenerate the data with matching names — see `docs/BRING_YOUR_OWN_DATA.md`.
@@ -52,6 +54,6 @@ To re-skin for a specific account, edit `config/demo_profile.json` (account name
 Every table is a closed-form function of a row index in `00_setup/generate_data.sql`; there is no external feed, no scraped data, and no credentials in the repo (auth is OAuth via the running identity / the app's service principal). A reviewer can regenerate the entire dataset from scratch and diff it.
 
 ## Pre-demo checklist
-- [ ] All entities fictional — confirm the operator + every partner name on screen / in tool output / in any Genie SQL is from the fictional list above. *(Default profile already is.)*
+- [ ] Partners fictional — confirm every **partner** name on screen / in tool output / in any Genie SQL is from the fictional list above (the operator is **bolttech** by design). *(Default profile already is.)*
 - [ ] No real credentials committed — confirmed (OAuth only).
 - [ ] Data regenerated in the target workspace via `install.py` (or `setup_notebook`), so it's local + synthetic.

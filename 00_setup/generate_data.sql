@@ -19,7 +19,7 @@ CREATE OR REPLACE TABLE {{S}}.markets (
   region      STRING          COMMENT 'Region: APAC, EMEA, AMER, Africa',
   currency    STRING          COMMENT 'ISO currency code for the market (synonyms: ccy, local currency)',
   CONSTRAINT markets_pk PRIMARY KEY (market_id)
-) COMMENT 'Markets Acme operates in (synthetic). One row per country/market.'
+) COMMENT 'Markets bolttech operates in (synthetic). One row per country/market.'
 
 -- @@
 INSERT INTO {{S}}.markets VALUES
@@ -32,7 +32,7 @@ INSERT INTO {{S}}.markets VALUES
 
 -- @@
 -- ---------------------------------------------------------------------------
--- partners (distribution partners embedding Acme protection)
+-- partners (distribution partners embedding bolttech protection)
 -- ---------------------------------------------------------------------------
 CREATE OR REPLACE TABLE {{S}}.partners (
   partner_id   STRING NOT NULL COMMENT 'Distribution partner id (synonyms: distributor, channel partner)',
@@ -40,7 +40,7 @@ CREATE OR REPLACE TABLE {{S}}.partners (
   partner_type STRING          COMMENT 'Partner type: telco, OEM, retail, bank, ecommerce',
   market_id    STRING          COMMENT 'Market the partner primarily operates in',
   CONSTRAINT partners_pk PRIMARY KEY (partner_id)
-) COMMENT 'Distribution partners (telcos, OEMs, retailers, banks) embedding Acme protection at checkout (synthetic).'
+) COMMENT 'Distribution partners (telcos, OEMs, retailers, banks) embedding bolttech protection at checkout (synthetic).'
 
 -- @@
 -- Partner names are FICTIONAL (compliance: never attach fabricated loss ratios /

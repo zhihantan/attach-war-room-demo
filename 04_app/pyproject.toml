@@ -1,7 +1,7 @@
 [project]
 name = "attach-war-room"
 version = "0.1.0"
-description = "Acme Attach War-Room — Databricks App (FastAPI + React)"
+description = "bolttech Attach War-Room — Databricks App (FastAPI + React)"
 requires-python = ">=3.11"
 dependencies = [
     "fastapi",

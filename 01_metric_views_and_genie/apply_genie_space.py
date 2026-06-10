@@ -18,7 +18,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 PROFILE = os.environ.get("DATABRICKS_PROFILE", "DEFAULT")
 SPACE_ID = os.environ.get("GENIE_SPACE_ID", "")
 WID = os.environ.get("WAREHOUSE_ID", "")
-TITLE = os.environ.get("GENIE_TITLE", "Acme Attach War-Room — Conversion & Profitability")
+TITLE = os.environ.get("GENIE_TITLE", "bolttech Attach War-Room — Conversion & Profitability")
 DESC = ("Diagnose embedded-checkout attach and conversion across partners, markets, and products, "
         "and watch the loss-ratio guardrail. Built on governed metric views (synthetic data).")
 

@@ -23,7 +23,7 @@ S = os.environ.get("SCHEMA_FQN", "bolttech_workshop_demo.attach_war_room")
 WID = os.environ.get("WAREHOUSE_ID", "")
 
 b = GenieSpaceBuilder(
-    title="Acme Attach War-Room — Conversion & Profitability",
+    title="bolttech Attach War-Room — Conversion & Profitability",
     description=("Diagnose embedded-checkout attach and conversion across partners, markets, and products, "
                  "and watch the loss-ratio guardrail. Built on governed metric views (synthetic data)."),
     warehouse_id=WID,

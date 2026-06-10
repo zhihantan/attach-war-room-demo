@@ -19,7 +19,7 @@ Lakebase is **load-bearing two ways**: (1) low-latency **serving** of `offer_con
 ```bash
 uv run --with databricks-sdk --with psycopg2-binary 02_lakebase/setup_provisioned.py
 ```
-*(Superseded autoscaling path, for reference only: `databricks postgres create-project attach-war-room --json '{"spec":{"display_name":"Acme Attach War-Room"}}' -p DEFAULT`, then `setup_lakebase.py`.)*
+*(Superseded autoscaling path, for reference only: `databricks postgres create-project attach-war-room --json '{"spec":{"display_name":"bolttech Attach War-Room"}}' -p DEFAULT`, then `setup_lakebase.py`.)*
 
 ## Connection pattern
 OAuth token auth (token ~1h TTL → fetch per unit of work):

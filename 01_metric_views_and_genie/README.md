@@ -18,7 +18,7 @@ uv run --with databricks-sdk 01_metric_views_and_genie/run_sql.py 01_metric_view
 
 # 2. Build serialized_space and create the Genie space
 uv run --with databricks-sdk 01_metric_views_and_genie/build_genie_space.py > /tmp/awr_serialized_space.json
-jq -n --arg title "Acme Attach War-Room — Conversion & Profitability" \
+jq -n --arg title "bolttech Attach War-Room — Conversion & Profitability" \
   --arg description "Diagnose embedded-checkout attach and conversion; watch the loss-ratio guardrail." \
   --arg parent_path "/Workspace/Users/<you>@databricks.com" --arg warehouse_id "" \
   --rawfile serialized_space /tmp/awr_serialized_space.json \

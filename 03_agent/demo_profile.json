@@ -1,6 +1,6 @@
 {
   "account": {
-    "name": "Acme",
+    "name": "bolttech",
     "product": "Attach War-Room",
     "tagline": "Diagnose why embedded-insurance attach dropped — then ship the fix to the live checkout in one approval.",
     "synthetic_notice": "All data is synthetic. No real PII, carriers, or partners."
@@ -93,7 +93,7 @@
     {
       "icon": "🛡️",
       "title": "Welcome to the Attach War-Room",
-      "body": "Acme's embedded-insurance model lives or dies on attach rate inside a partner's checkout. This copilot turns “attach fell” into a shipped, governed fix — in one sitting.",
+      "body": "bolttech's embedded-insurance model lives or dies on attach rate inside a partner's checkout. This copilot turns “attach fell” into a shipped, governed fix — in one sitting.",
       "bullets": []
     },
     {
@@ -134,14 +134,14 @@
   },
   "about": {
     "purpose": [
-      "When you buy a phone online, the store often asks at checkout whether you'd like to add protection — screen repair, theft, accidental damage. Acme is the company that powers those insurance offers inside other companies' checkouts — telcos, banks and electronics retailers around the world. Its whole business hinges on one number: the share of shoppers who say “yes” to that add-on. That number is called the attach rate.",
+      "When you buy a phone online, the store often asks at checkout whether you'd like to add protection — screen repair, theft, accidental damage. bolttech is the company that powers those insurance offers inside other companies' checkouts — telcos, banks and electronics retailers around the world. Its whole business hinges on one number: the share of shoppers who say “yes” to that add-on. That number is called the attach rate.",
       "When the attach rate quietly slips in one partner's checkout, the lost revenue adds up fast — but the cause is scattered across dozens of dashboards, and fixing it normally takes days and several teams. The Attach War-Room does it in one sitting: it pinpoints exactly where shoppers are dropping off, tests a fix against real recent traffic before anything goes live, checks the fix won't lose money on future claims, and — with one human approval — pushes the change to the live checkout so the offer works again right away. The recovered revenue then ticks up on screen in real time, using the company's own trusted numbers."
     ],
     "audience": "Built for the teams who own a partner's checkout performance and revenue — and shown to the commercial and data leaders who care about the result.",
     "glossary": [
       {
         "term": "Attach rate",
-        "def": "The share of checkout shoppers who add the insurance offer. Higher means more policies sold to the same traffic — Acme's single biggest growth lever."
+        "def": "The share of checkout shoppers who add the insurance offer. Higher means more policies sold to the same traffic — bolttech's single biggest growth lever."
       },
       {
         "term": "The funnel",

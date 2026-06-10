@@ -4,7 +4,7 @@
 > workspace and run the on-stage demo in **~30 minutes**. Copy-paste friendly. Real paths, real commands.
 >
 > **All data is synthetic.** No real PII or partner-confidential data. Every named entity is **fictional** — the
-> operator (**Acme Embedded Insurance**) and all partners (Velora Telecom, Siam Mobile Care, Marina Mobile, Savanna
+> operator (**bolttech**) and all partners (Velora Telecom, Siam Mobile Care, Marina Mobile, Savanna
 > Mobile, Brightway Electronics, Rift Valley Bank, …) are invented, and this fictional set is the active default
 > everywhere (data, profile, Genie space, agent, fixtures) — safe to show externally as-is. See
 > [Re-skin](#3-re-skin-rename-rebrand) only if you want to rebrand to a *different* account.
@@ -122,7 +122,7 @@ export PGDATABASE=<your_db>
 
 ### 3. Re-skin (rename / rebrand)
 All branding (account name, persona, partner display names, demo branches, walkthrough copy, theme color,
-currencies) lives in **one** JSON: `$AWR/config/demo_profile.json` (active default = **Acme** operator + **fictional** partner names).
+currencies) lives in **one** JSON: `$AWR/config/demo_profile.json` (active default = **bolttech** operator + **fictional** partner names).
 
 - **Quick text-only re-skin** (account name, tagline, theme, walkthrough): edit `config/demo_profile.json` in
   place and rebuild the frontend. No data regen needed.
@@ -161,7 +161,7 @@ uv run --with databricks-sdk \
 
 # (b) build the serialized space, then POST it to create the Genie space
 uv run --with databricks-sdk $AWR/01_metric_views_and_genie/build_genie_space.py > /tmp/awr_space.json
-jq -n --arg title "Acme Attach War-Room — Conversion & Profitability" \
+jq -n --arg title "bolttech Attach War-Room — Conversion & Profitability" \
   --arg description "Diagnose embedded-checkout attach/conversion; watch the loss-ratio guardrail." \
   --arg parent_path "/Workspace/Users/$(databricks current-user me --profile DEFAULT | jq -r .userName)" \
   --arg warehouse_id "<YOUR_WAREHOUSE_ID>" \
@@ -351,7 +351,7 @@ triggers the guardrail block.
 ### Repo map (where things live)
 ```
 config.yaml                         build-script source of truth (host/profile/warehouse/schema/genie/lakebase/SP)
-config/demo_profile.json            the re-skin layer (active = Acme operator + fictional partner names)
+config/demo_profile.json            the re-skin layer (active = bolttech operator + fictional partner names)
 00_setup/run_setup.py               data foundation (runs generate_data.sql)
 01_metric_views_and_genie/run_sql.py        generic {{S}} SQL runner (EXISTS; README list omits it)
 01_metric_views_and_genie/build_genie_space.py / ask_genie.py   Genie create + validate

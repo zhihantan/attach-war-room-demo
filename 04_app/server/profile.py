@@ -4,7 +4,7 @@
 Everything account-specific (persona, partner display names, demo branches,
 currencies, walkthrough copy, theme) lives HERE, not scattered across the agent
 prompt, the frontend, and the Genie builder. One profile turns a multi-week
-Acme build into a one-day re-skin for the next embedded-insurance account.
+bolttech build into a one-day re-skin for the next embedded-insurance account.
 
 Resolution order (first hit wins):
   1. $DEMO_PROFILE_PATH                       (explicit file)
@@ -12,8 +12,8 @@ Resolution order (first hit wins):
   3. ../config/demo_profile.json  ·  ../../config/demo_profile.json   (repo dev)
   4. the embedded DEFAULT below  (so the deployed App always works with no file)
 
-The default profile is already fictional (Acme + invented partners). To re-skin to a
-NEW account: copy config/demo_profile.json -> config/demo_profile.<account>.json,
+The default profile's operator is bolttech (the real customer) with fictional partners. To
+re-skin to a NEW account: copy config/demo_profile.json -> config/demo_profile.<account>.json,
 edit names/markets/persona, set DEMO_PROFILE_PATH (and regenerate data with the
 matching partner names on the next rebuild — see docs/BRING_YOUR_OWN_DATA.md).
 """
@@ -21,12 +21,12 @@ import json
 import os
 
 # ---------------------------------------------------------------------------
-# Embedded DEFAULT — the live Acme profile. Keep in sync with
+# Embedded DEFAULT — the live bolttech profile. Keep in sync with
 # config/demo_profile.json (that file overrides this when present).
 # ---------------------------------------------------------------------------
 DEFAULT = {
     "account": {
-        "name": "Acme",
+        "name": "bolttech",
         "product": "Attach War-Room",
         "tagline": "Diagnose why embedded-insurance attach dropped — then ship the fix to the live checkout in one approval.",
         "synthetic_notice": "All data is synthetic. No real PII, carriers, or partners.",
@@ -68,7 +68,7 @@ DEFAULT = {
     # Welcome-modal carousel (the product walkthrough).
     "walkthrough": [
         {"icon": "\U0001f6e1️", "title": "Welcome to the Attach War-Room",
-         "body": "Acme's model lives or dies on attach rate inside a partner's checkout. This copilot turns “attach fell” into a shipped, governed fix — in one sitting.",
+         "body": "bolttech's model lives or dies on attach rate inside a partner's checkout. This copilot turns “attach fell” into a shipped, governed fix — in one sitting.",
          "bullets": []},
         {"icon": "\U0001f504", "title": "One closed loop",
          "body": "The agent runs a stateful loop you can watch live:",
@@ -94,12 +94,12 @@ DEFAULT = {
     # About page content (re-skinnable description of purpose + architecture).
     "about": {
         "purpose": [
-            "When you buy a phone online, the store often asks at checkout whether you'd like to add protection — screen repair, theft, accidental damage. Acme is the company that powers those insurance offers inside other companies' checkouts — telcos, banks and electronics retailers around the world. Its whole business hinges on one number: the share of shoppers who say “yes” to that add-on. That number is called the attach rate.",
+            "When you buy a phone online, the store often asks at checkout whether you'd like to add protection — screen repair, theft, accidental damage. bolttech is the company that powers those insurance offers inside other companies' checkouts — telcos, banks and electronics retailers around the world. Its whole business hinges on one number: the share of shoppers who say “yes” to that add-on. That number is called the attach rate.",
             "When the attach rate quietly slips in one partner's checkout, the lost revenue adds up fast — but the cause is scattered across dozens of dashboards, and fixing it normally takes days and several teams. The Attach War-Room does it in one sitting: it pinpoints exactly where shoppers are dropping off, tests a fix against real recent traffic before anything goes live, checks the fix won't lose money on future claims, and — with one human approval — pushes the change to the live checkout so the offer works again right away. The recovered revenue then ticks up on screen in real time, using the company's own trusted numbers.",
         ],
         "audience": "Built for the teams who own a partner's checkout performance and revenue — and shown to the commercial and data leaders who care about the result.",
         "glossary": [
-            {"term": "Attach rate", "def": "The share of checkout shoppers who add the insurance offer. Higher means more policies sold to the same traffic — Acme's single biggest growth lever."},
+            {"term": "Attach rate", "def": "The share of checkout shoppers who add the insurance offer. Higher means more policies sold to the same traffic — bolttech's single biggest growth lever."},
             {"term": "The funnel", "def": "The steps a shopper goes through: see the offer → start a quote → finish it → buy → activate. A drop at any one step pulls the attach rate down, and each has a different fix."},
             {"term": "GWP", "def": "Gross Written Premium — the total premium from policies sold. It's the revenue the “Recovered GWP” tile is counting back up."},
             {"term": "Loss ratio", "def": "Claims paid out ÷ premium taken in. Much above ~70% means a policy is losing money, so the guardrail blocks any “fix” that would push past it."},

@@ -71,7 +71,7 @@ else
   echo "        space_id you must wire back into config.yaml + 04_app/app.yaml)."
   echo "        Only do this if the space was deleted. Exact command (01 README):"
   echo
-  echo "          jq -n --arg title \"Acme Attach War-Room — Conversion & Profitability\" \\"
+  echo "          jq -n --arg title \"bolttech Attach War-Room — Conversion & Profitability\" \\"
   echo "            --arg description \"Diagnose embedded-checkout attach and conversion; watch the loss-ratio guardrail.\" \\"
   echo "            --arg parent_path \"/Workspace/Users/${WORKSPACE_USER}\" --arg warehouse_id \"\" \\"
   echo "            --rawfile serialized_space /tmp/awr_serialized_space.json \\"

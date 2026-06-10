@@ -242,7 +242,7 @@ def step_metrics(ctx):
     log("  metric views ok")
 
 
-GENIE_TITLE = "Acme Attach War-Room — Conversion & Profitability"
+GENIE_TITLE = "bolttech Attach War-Room — Conversion & Profitability"
 
 
 def _find_genie_space(w, space_id, title):

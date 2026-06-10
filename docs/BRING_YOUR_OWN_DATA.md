@@ -1,11 +1,11 @@
 # Bring Your Own Data — the "now point it at OUR data" contract
 
 > Tier 3.3. This is the contract a customer (or an SA piloting on real data) reads when
-> they ask the obvious question after the demo: *"OK, that's synthetic Acme data —
+> they ask the obvious question after the demo: *"OK, that's synthetic bolttech data —
 > what does it take to run this on **our** funnel?"*
 >
 > The honest answer: the metric views and agent tools depend on a **small, well-defined
-> table/column shape**, not on Acme specifics. If you can land your funnel and claims
+> table/column shape**, not on bolttech specifics. If you can land your funnel and claims
 > data into that shape (directly, or via the adapter views in §2), the metric layer, the
 > shadow-sim math, the loss-ratio guardrail and the agent loop run **unchanged**. What is
 > NOT reusable is the demo's *fiction* — the three planted anomalies, the offline fixtures,

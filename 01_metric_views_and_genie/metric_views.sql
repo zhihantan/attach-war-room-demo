@@ -15,7 +15,7 @@ WITH METRICS
 LANGUAGE YAML
 AS $$
 version: 1.1
-comment: "Embedded-checkout funnel and attach KPIs for the Acme exchange (synthetic). Grain: one checkout session."
+comment: "Embedded-checkout funnel and attach KPIs for the bolttech exchange (synthetic). Grain: one checkout session."
 source: {{S}}.sessions
 joins:
   - name: partner
