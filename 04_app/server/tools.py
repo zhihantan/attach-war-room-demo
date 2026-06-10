@@ -541,7 +541,7 @@ TOOL_SCHEMAS = [
             {"scenario_id": {"type": "integer"}, "approved_by": {"type": "string"}}, ["scenario_id"]),
     _schema("rollback_offer_change", "Reverse a shipped offer change as a multi-table ACID undo (restores the prior offer_config value + compensating audit + marks the scenario rolled_back). With no id, rolls back the most recent ship. Use when the user asks to undo/revert/roll back a change.",
             {"scenario_id": {"type": "integer"}, "audit_id": {"type": "integer"}, "rolled_back_by": {"type": "string"}}, []),
-    _schema("query_genie", "Open-ended natural-language analytics via the governed Genie space (use for ad-hoc questions not covered by the other tools).",
+    _schema("query_genie", "Open-ended natural-language analytics via the governed Genie space (use for ad-hoc questions not covered by the other tools). Pass partner/market names EXACTLY as given (they are fictional and exist verbatim in the data); never substitute a real-world company name.",
             {"question": {"type": "string"}}, ["question"]),
     _schema("draft_partner_note", "Draft a concise partner-facing note summarizing the finding and corrective action.",
             {"partner": {"type": "string"}, "context": {"type": "string"}}, ["partner", "context"]),
